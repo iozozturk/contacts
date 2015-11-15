@@ -1,11 +1,14 @@
 package controllers;
 
-import org.apache.commons.io.FileUtils;
-import play.*;
-import play.mvc.*;
+import org.xml.sax.SAXException;
+import play.Play;
+import play.mvc.Controller;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Result;
+import utils.XMLUtils;
+import views.html.index;
 
-import views.html.*;
-
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
@@ -17,20 +20,19 @@ public class Application extends Controller {
         return ok(index.render("Your new application is ready."));
     }
 
-    public static play.mvc.Result upload() throws IOException {
-        play.mvc.Http.MultipartFormData body = request().body().asMultipartFormData();
-        play.mvc.Http.MultipartFormData.FilePart filePart = body.getFile("picture");
-        if (filePart != null) {
-            String fileName = filePart.getFilename();
-            String contentType = filePart.getContentType();
-            java.io.File file = filePart.getFile();
-            Logger.info("PATH:" + file.getPath());
+    public static play.mvc.Result upload() throws IOException, ParserConfigurationException, SAXException {
 
-            String baseDir = UPLOAD_DIR;
-            File destination = new File(baseDir, filePart.getFilename()).getAbsoluteFile();
-            String filePath = destination.getPath();
-            FileUtils.moveFile(file, destination);
+        MultipartFormData body = request().body().asMultipartFormData();
+        MultipartFormData.FilePart filePart = body.getFile("xmlFile");
+
+        if (filePart != null) {
+
+            File file = utils.FileUtils.moveFilePartToDir(UPLOAD_DIR, filePart);
+
+            XMLUtils.parseXMLFile(file);
+
             return ok("File uploaded");
+
         } else {
             flash("error", "Missing file");
             return badRequest();
