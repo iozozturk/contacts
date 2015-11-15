@@ -1,6 +1,7 @@
 package utils;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,9 +16,14 @@ import java.io.IOException;
 public class XMLUtils {
 
     public static void parseXMLFile(File file) throws ParserConfigurationException, IOException, SAXException {
+        //todo impl exception controls
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
         Document doc = dBuilder.parse(file);
+        doc.getDocumentElement().normalize();
+
+        NodeList contactList = doc.getElementsByTagName("contact");
+
 
         System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
     }

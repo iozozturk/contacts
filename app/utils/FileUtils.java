@@ -19,7 +19,7 @@ public class FileUtils {
         String extension = FilenameUtils.getExtension(filePartFullName);
         String filePartName = FilenameUtils.removeExtension(filePartFullName);
 
-        String newFileName = filePartName + UUID.randomUUID() + extension;
+        String newFileName = filePartName + "-" + UUID.randomUUID() + "." + extension;
         File destination = new File(dir, newFileName).getAbsoluteFile();
         org.apache.commons.io.FileUtils.moveFile(file, destination);
 
