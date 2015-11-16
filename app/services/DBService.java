@@ -11,22 +11,28 @@ import play.Play;
 public class DBService {
 
     private static final String DB_NAME =  Play.application().configuration().getString("mongodb.name");
+    static final Morphia morphia = MorphiaClient.morphia;
+    static final Datastore datastore = morphia.createDatastore(getMongoClient(), DB_NAME);
 
+    static{
+        morphia.mapPackage("models");
+        datastore.ensureIndexes();
+    }
 
     private static class MongoDBClient {
        private static final MongoClient mongoClient = new MongoClient();
+    }
+
+    private static class MorphiaClient {
+        private static final Morphia morphia = new Morphia();
     }
 
     public static MongoClient getMongoClient(){
         return MongoDBClient.mongoClient;
     }
 
-    public static void setupMorphia(){
-        final Morphia morphia = new Morphia();
-
-        morphia.mapPackage("org.mongodb.morphia.example");
-
-        final Datastore datastore = morphia.createDatastore(getMongoClient(), DB_NAME);
-        datastore.ensureIndexes();
+    public static Datastore getMorphiaClient(){
+        return datastore;
     }
+
 }
