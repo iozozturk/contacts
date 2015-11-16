@@ -1,16 +1,20 @@
 package controllers;
 
+import models.Contact;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import play.Play;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Result;
+import services.ContactService;
 import utils.XMLUtils;
 import views.html.index;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Application extends Controller {
 
@@ -29,9 +33,13 @@ public class Application extends Controller {
 
             File file = utils.FileUtils.moveFilePartToDir(UPLOAD_DIR, filePart);
 
-            XMLUtils.parseXMLFile(file);
+            NodeList nodeList = XMLUtils.parseXMLFile(file);
 
-            return ok("File uploaded");
+            List<Contact> contacts = ContactService.parseXMLContacts(nodeList);
+            long count = contacts.stream().map(ContactService::saveContacts).count();
+
+
+            return ok("File uploaded and " + count + " contacts saved.");
 
         } else {
             flash("error", "Missing file");

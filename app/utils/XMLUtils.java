@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class XMLUtils {
 
-    public static void parseXMLFile(File file) throws ParserConfigurationException, IOException, SAXException {
+    public static NodeList parseXMLFile(File file) throws ParserConfigurationException, IOException, SAXException {
         //todo impl exception controls
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
@@ -23,8 +23,6 @@ public class XMLUtils {
         doc.getDocumentElement().normalize();
 
         NodeList contactList = doc.getElementsByTagName("contact");
-
-
-        System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+        return contactList;
     }
 }
