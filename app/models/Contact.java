@@ -19,14 +19,6 @@ public class Contact {
     private String lastName;
     private List<String> phones;
 
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
