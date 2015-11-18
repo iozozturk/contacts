@@ -2,7 +2,8 @@ package services;
 
 import models.Contact;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -21,7 +22,15 @@ public class ContactService {
 
     public static Contact saveContacts(Contact contact){
         Datastore datastore = DBService.getMorphiaClient();
-        Key<Contact> contactKey = datastore.save(contact);
+
+        Query<Contact> findContact = datastore.createQuery(Contact.class)
+                .field("name").equal(contact.getName())
+                .field("lastName").equal(contact.getLastName());
+
+        UpdateOperations<Contact> updatePhones = datastore.createUpdateOperations(Contact.class).addAll("phones", contact.getPhones(),false);
+        datastore.update(findContact, updatePhones, true);
+
+//        Key<Contact> contactKey = datastore.save(contact);
         return contact;//todo change logic
 
     }

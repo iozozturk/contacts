@@ -50,4 +50,23 @@ public class Contact {
     public void setPhones(List<String> phones) {
         this.phones = phones;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Contact contact = (Contact) o;
+
+        if (!name.equals(contact.name)) return false;
+        return lastName.equals(contact.lastName);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + lastName.hashCode();
+        return result;
+    }
 }
