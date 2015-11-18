@@ -1,6 +1,5 @@
 package controllers;
 
-import models.Contact;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import play.Play;
@@ -14,7 +13,6 @@ import views.html.index;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class Application extends Controller {
 
@@ -33,16 +31,20 @@ public class Application extends Controller {
 
             File file = utils.FileUtils.moveFilePartToDir(UPLOAD_DIR, filePart);
 
+            if (!XMLUtils.validateDocument(file)){
+                return badRequest("XML document is not valid against defined schema");
+            }
+
             NodeList nodeList = XMLUtils.parseXMLFile(file);
 
             //parse xml to model and save to db
+            //todo wrap in promise
             ContactService.parseXMLContacts(nodeList).forEach(ContactService::saveContacts);
 
             return ok("File uploaded and processing contacts");
 
         } else {
-            flash("error", "Missing file");
-            return badRequest();
+            return badRequest("Missing file");
         }
     }
 
