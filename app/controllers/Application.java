@@ -35,11 +35,10 @@ public class Application extends Controller {
 
             NodeList nodeList = XMLUtils.parseXMLFile(file);
 
-            List<Contact> contacts = ContactService.parseXMLContacts(nodeList);
-            long count = contacts.stream().map(ContactService::saveContacts).count();
+            //parse xml to model and save to db
+            ContactService.parseXMLContacts(nodeList).forEach(ContactService::saveContacts);
 
-
-            return ok("File uploaded and " + count + " contacts saved.");
+            return ok("File uploaded and processing contacts");
 
         } else {
             flash("error", "Missing file");

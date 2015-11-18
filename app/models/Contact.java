@@ -50,9 +50,7 @@ public class Contact {
 
         Contact contact = (Contact) o;
 
-        if (!name.equals(contact.name)) return false;
-        return lastName.equals(contact.lastName);
-
+        return name.equals(contact.name) && lastName.equals(contact.lastName);
     }
 
     @Override

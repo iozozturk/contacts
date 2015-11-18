@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  */
 public class ContactService {
 
-    public static Contact saveContacts(Contact contact){
+    public static void saveContacts(Contact contact){
         Datastore datastore = DBService.getMorphiaClient();
 
         Query<Contact> findContact = datastore.createQuery(Contact.class)
@@ -29,10 +29,6 @@ public class ContactService {
 
         UpdateOperations<Contact> updatePhones = datastore.createUpdateOperations(Contact.class).addAll("phones", contact.getPhones(),false);
         datastore.update(findContact, updatePhones, true);
-
-//        Key<Contact> contactKey = datastore.save(contact);
-        return contact;//todo change logic
-
     }
 
     public static List<Contact> parseXMLContacts(NodeList nodeList){
