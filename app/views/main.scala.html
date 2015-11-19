@@ -8,16 +8,18 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
         <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/services.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/controllers.js")"></script>
+
     </head>
-    <body>
-    @helper.form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {
+    <body ng-app="contacts">
+        <div ng-controller="ContactCtrl">
 
-        <input type="file" name="xmlFile">
+            <input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
 
-        <p>
-            <input type="submit">
-        </p>
-
-    }
+        </div>
     </body>
 </html>

@@ -8,7 +8,7 @@ import play.mvc.Http.MultipartFormData;
 import play.mvc.Result;
 import services.ContactService;
 import utils.XMLUtils;
-import views.html.index;
+import views.html.main;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -19,13 +19,13 @@ public class Application extends Controller {
     public static final String UPLOAD_DIR = Play.application().configuration().getString("store.file.dir");
 
     public static Result index() {
-        return ok(index.render("Your new application is ready."));
+        return ok(main.render("Contacts"));
     }
 
     public static play.mvc.Result upload() throws IOException, ParserConfigurationException, SAXException {
 
         MultipartFormData body = request().body().asMultipartFormData();
-        MultipartFormData.FilePart filePart = body.getFile("xmlFile");
+        MultipartFormData.FilePart filePart = body.getFile("file");
 
         if (filePart != null) {
 
