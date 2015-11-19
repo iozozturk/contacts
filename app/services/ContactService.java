@@ -47,4 +47,10 @@ public class ContactService {
 
         return nodeStream.map(parseNode).collect(Collectors.toList());
     }
+
+    public static List<Contact> findByName(String name){
+        Datastore datastore = DBService.getMorphiaClient();
+        Query<Contact> contacts = datastore.find(Contact.class).field("name").startsWithIgnoreCase(name);
+        return contacts.asList();
+    }
 }
