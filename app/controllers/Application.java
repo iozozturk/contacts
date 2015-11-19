@@ -16,36 +16,8 @@ import java.io.IOException;
 
 public class Application extends Controller {
 
-    public static final String UPLOAD_DIR = Play.application().configuration().getString("store.file.dir");
-
     public static Result index() {
         return ok(main.render("Contacts"));
-    }
-
-    public static play.mvc.Result upload() throws IOException, ParserConfigurationException, SAXException {
-
-        MultipartFormData body = request().body().asMultipartFormData();
-        MultipartFormData.FilePart filePart = body.getFile("file");
-
-        if (filePart != null) {
-
-            File file = utils.FileUtils.moveFilePartToDir(UPLOAD_DIR, filePart);
-
-            if (!XMLUtils.validateDocument(file)){
-                return badRequest("XML document is not valid against defined schema");
-            }
-
-            NodeList nodeList = XMLUtils.parseXMLFile(file);
-
-            //parse xml to model and save to db
-            //todo wrap in promise
-            ContactService.parseXMLContacts(nodeList).forEach(ContactService::saveContacts);
-
-            return ok("File uploaded and processing contacts");
-
-        } else {
-            return badRequest("Missing file");
-        }
     }
 
 }
