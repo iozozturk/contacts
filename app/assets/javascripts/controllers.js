@@ -7,13 +7,15 @@ angular.module('contacts.controllers', ['contacts.services'])
         $scope.query = "";
         $scope.contacts = [];
         $scope.totalContactsCount = 0;
+        $scope.validate = false;
 
         $scope.uploadFile = function (files) {
             var fd = new FormData();
+            $scope.message = "";
             //Take the first selected file
             fd.append("file", files[0]);
 
-            fileService.uploadFile(fd)
+            fileService.uploadFile(fd, $scope.validate)
                 .success(function (response) {
                     $scope.message = response;
                     console.log("success");

@@ -20,7 +20,7 @@ import java.io.IOException;
 public class FileController {
     public static final String UPLOAD_DIR = Play.application().configuration().getString("store.file.dir");
 
-    public static Result upload() throws IOException, ParserConfigurationException, SAXException {
+    public static Result upload(boolean validate) throws IOException, ParserConfigurationException, SAXException {
 
         Http.MultipartFormData body = Controller.request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart filePart = body.getFile("file");
@@ -29,7 +29,7 @@ public class FileController {
 
             File file = utils.FileUtils.moveFilePartToDir(UPLOAD_DIR, filePart);
 
-            if (!XMLUtils.validateDocument(file)){
+            if (validate && !XMLUtils.validateDocument(file)) {
                 return Results.badRequest("XML document is not valid against defined schema");
             }
 

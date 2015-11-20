@@ -14,11 +14,12 @@ angular.module('contacts.services', [])
     .service('fileService', function ($http) {
         'use strict';
 
-        this.uploadFile = function (fd) {
+        this.uploadFile = function (fd, validate) {
             return $http.post("/upload", fd, {
                 withCredentials: true,
                 headers: {'Content-Type': undefined},
-                transformRequest: angular.identity
+                transformRequest: angular.identity,
+                params: {validate: validate}
             })
         }
 
