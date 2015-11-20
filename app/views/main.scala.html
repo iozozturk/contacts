@@ -21,7 +21,8 @@
             <input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
             <span>{{message}}</span>
 
-            <input type="search" ng-model="query" ng-change="search()">
+
+            Search: <input type="search" ng-model="query" ng-change="search()">
             <ul>
                 <li ng-repeat="contact in contacts">
                     <span>{{contact}}</span>
