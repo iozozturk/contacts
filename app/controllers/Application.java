@@ -7,7 +7,7 @@ import play.libs.F;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.ActorService;
-import views.html.main;
+import views.html.*;
 
 public class Application extends Controller {
 

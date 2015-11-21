@@ -1,3 +1,3 @@
 if (window.console) {
-  console.log("Welcome to your Play application's JavaScript!");
+  console.log("Please don't use this section unless you are a developer. Read about Self-XSS!");
 }
