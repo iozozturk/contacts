@@ -16,13 +16,12 @@
 
     </head>
     <body ng-app="contacts">
-        <div ng-controller="ContactCtrl">
+        <div ng-controller="ContactCtrl" ng-init="startSearching()">
 
             <input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
             Validate: <input type="checkbox" name="validate" ng-model="validate">
             Response: <span>{{message}}</span>
 
-            <br/>
             <div>
                 Search: <input type="search" ng-model="query" ng-change="search()">
                 <ul>

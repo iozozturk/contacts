@@ -11,3 +11,5 @@ GET         /assets/*file        controllers.Assets.versioned(path="/public", fi
 POST        /upload              controllers.FileController.upload(validate: Boolean)
 
 GET         /contacts            controllers.ContactController.getContacts(q: String)
+
+GET        /register            controllers.Application.registerEventSource()

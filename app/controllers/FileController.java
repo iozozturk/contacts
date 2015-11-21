@@ -1,5 +1,6 @@
 package controllers;
 
+import actors.EventActor;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import play.Play;
@@ -8,6 +9,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
+import services.ActorService;
 import services.ContactService;
 import utils.XMLUtils;
 
@@ -36,9 +38,13 @@ public class FileController {
 
             NodeList nodeList = XMLUtils.parseXMLFile(file);
 
-            //parse xml to model and save to db
-            F.Promise.promise(()-> {
+            //parse xml to model and save to db asynchronously
+            F.Promise.promise(() -> {
                 ContactService.parseXMLContacts(nodeList).forEach(ContactService::saveContacts);
+                Thread.sleep(3000); //Simulating a huge file taking time
+                return null;
+            }).map((n) -> {
+                ActorService.eventRef.tell(EventActor.DB_FINISH, null);
                 return null;
             });
 

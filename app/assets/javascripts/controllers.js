@@ -1,6 +1,6 @@
 /** Controllers */
 angular.module('contacts.controllers', ['contacts.services'])
-    .controller('ContactCtrl', function ($scope, contactService, fileService) {
+    .controller('ContactCtrl', function ($scope, $http, contactService, fileService) {
         'use strict';
 
         $scope.message = "";
@@ -8,6 +8,32 @@ angular.module('contacts.controllers', ['contacts.services'])
         $scope.contacts = [];
         $scope.totalContactsCount = 0;
         $scope.validate = false;
+
+        $scope.searchResults = [];
+        $scope.searchString = "";
+
+        $scope.addSearchResult = function (e) {
+            $scope.$apply(function () {
+                if (e.data == "db_finish") {
+                    $scope.message = "Processed contacts and saved!"
+                } else {
+                    $scope.searchResults.unshift(JSON.parse(e.data));
+                }
+            });
+        };
+
+        $scope.startSearching = function () {
+            $scope.stopSearching();
+            $scope.searchResults = [];
+            $scope.eventSource = new EventSource("/register");
+            $scope.eventSource.addEventListener("message", $scope.addSearchResult, false);
+        };
+
+        $scope.stopSearching = function () {
+            if (typeof $scope.eventSource != 'undefined') {
+                $scope.eventSource.close();
+            }
+        };
 
         $scope.uploadFile = function (files) {
             var fd = new FormData();
