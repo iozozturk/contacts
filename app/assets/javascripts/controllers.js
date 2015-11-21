@@ -7,7 +7,7 @@ angular.module('contacts.controllers', ['contacts.services'])
         $scope.query = "";
         $scope.contacts = [];
         $scope.totalContactsCount = 0;
-        $scope.validate = false;
+        $scope.validate = true;
 
         $scope.searchResults = [];
         $scope.searchString = "";

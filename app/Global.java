@@ -23,6 +23,7 @@ public class Global extends GlobalSettings {
 
     @Override
     public void onStop(Application application) {
+        ActorService.stopActors();
     }
 
     @Override

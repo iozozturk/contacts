@@ -1,6 +1,7 @@
 package controllers;
 
 import actors.EventActor;
+import akka.actor.ActorRef;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import play.Play;
@@ -20,7 +21,7 @@ import java.io.IOException;
 /**
  * Created by ismet on 19/11/15.
  */
-public class FileController {
+public class FileController extends Controller {
     public static final String UPLOAD_DIR = Play.application().configuration().getString("store.file.dir");
 
     public static Result upload(boolean validate) throws IOException, ParserConfigurationException, SAXException {
@@ -41,10 +42,11 @@ public class FileController {
             //parse xml to model and save to db asynchronously
             F.Promise.promise(() -> {
                 ContactService.parseXMLContacts(nodeList).forEach(ContactService::saveContacts);
-                Thread.sleep(3000); //Simulating a huge file taking time
+                Thread.sleep(1000); //Simulating a huge file taking time
                 return null;
             }).map((n) -> {
-                ActorService.eventRef.tell(EventActor.DB_FINISH, null);
+                F.Tuple<EventActor.Messages, String> message = new F.Tuple<>(EventActor.Messages.DB_FINISH, ctx().request().remoteAddress());
+                ActorService.eventRef.tell(message, ActorRef.noSender());
                 return null;
             });
 

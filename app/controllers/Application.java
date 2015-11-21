@@ -1,7 +1,9 @@
 package controllers;
 
+import akka.actor.ActorRef;
 import play.Logger;
 import play.libs.EventSource;
+import play.libs.F;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.ActorService;
@@ -13,7 +15,7 @@ public class Application extends Controller {
         return ok(main.render("Contacts"));
     }
 
-    public static Result registerEventSource(){
+    public static Result registerEventSource() {
         String remoteAddress = request().remoteAddress();
         Logger.info(remoteAddress + " - SSE connected");
 
@@ -21,7 +23,8 @@ public class Application extends Controller {
             @Override
             public void onConnected() {
                 EventSource currentSocket = this;
-                ActorService.eventRef.tell(currentSocket, null);
+                F.Tuple<EventSource, String> message = new F.Tuple<>(currentSocket, remoteAddress);
+                ActorService.eventRef.tell(message, ActorRef.noSender());
             }
         };
         return ok(eventSource);

@@ -3,10 +3,9 @@ package actors;
 import akka.actor.UntypedActor;
 import play.Logger;
 import play.libs.EventSource;
+import play.libs.F;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,36 +13,58 @@ import java.util.Map;
  */
 public class EventActor extends UntypedActor {
 
-    List<EventSource> connections = new ArrayList<>();
     Map<String, EventSource> eventSourceMap = new HashMap<>();
+
+    public enum Messages {
+        DB_FINISH("db_finish");
+
+        private final String message;
+
+        Messages(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
 
     public static final String DB_FINISH = "DB Operations Finished";
 
     @Override
     public void onReceive(Object message) throws Exception {
+
         // Handle connections
-        if (message instanceof EventSource) {
-            final EventSource eventSource = (EventSource) message;
+        if (message instanceof F.Tuple) {
+            String remoteAddress = (String) ((F.Tuple) message)._2;
 
-            if (connections.contains(eventSource)) {
-                // Browser is disconnected
-                connections.remove(eventSource);
-                Logger.info("Browser disconnected (" + connections.size() + " browsers currently connected)");
-            } else {
-                // Register disconnected callback
-                eventSource.onDisconnected(() -> self().tell(eventSource, null));
-                // New browser connected
-                connections.add(eventSource);
-                Logger.info("New browser connected (" + connections.size() + " browsers currently connected)");
+            if (((F.Tuple) message)._1 instanceof EventSource) {
+
+                final EventSource eventSource = (EventSource) ((F.Tuple) message)._1;
+
+                if (eventSourceMap.containsKey(remoteAddress)) {
+                    // Browser is disconnected
+                    eventSourceMap.remove(remoteAddress);
+                    Logger.info("Browser disconnected (" + eventSourceMap.size() + " browsers currently connected)");
+                } else {
+                    // Register disconnected callback
+                    eventSource.onDisconnected(() -> self().tell(eventSource, null));
+                    // New browser connected
+                    eventSourceMap.put(remoteAddress, eventSource);
+                    Logger.info("New browser connected (" + eventSourceMap.size() + " browsers currently connected)");
+                }
+            }
+
+            if (((F.Tuple) message)._1 instanceof Messages) {
+                switch ((Messages)((F.Tuple) message)._1) {
+                    case DB_FINISH:
+                        eventSourceMap.get(remoteAddress).send(EventSource.Event.event("db_finish"));
+                        break;
+                    default:
+                        Logger.warn("Undefined msg");
+                }
             }
         }
-        // Tick, send time to all connected browsers
-        if (DB_FINISH.equals(message)) {
-            for (EventSource es : connections) {
-                es.send(EventSource.Event.event("db_finish"));
-            }
-        }
+
     }
-
-
 }
