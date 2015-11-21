@@ -3,6 +3,7 @@ package controllers;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import play.Play;
+import play.libs.F;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -36,8 +37,10 @@ public class FileController {
             NodeList nodeList = XMLUtils.parseXMLFile(file);
 
             //parse xml to model and save to db
-            //todo wrap in promise
-            ContactService.parseXMLContacts(nodeList).forEach(ContactService::saveContacts);
+            F.Promise.promise(()-> {
+                ContactService.parseXMLContacts(nodeList).forEach(ContactService::saveContacts);
+                return null;
+            });
 
             return Results.ok("File uploaded and processing contacts");
 
