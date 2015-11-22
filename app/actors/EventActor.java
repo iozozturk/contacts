@@ -36,7 +36,6 @@ public class EventActor extends UntypedActor {
         );
     }
 
-
     @Override
     public void onReceive(Object message) throws Exception {
 
@@ -76,7 +75,7 @@ public class EventActor extends UntypedActor {
         }
 
         if (message instanceof RefreshQueryResultsMsg) {
-            Logger.debug("Refreshing query results");
+//            Logger.debug("Refreshing query results");
             remoteQueryMap.keySet().stream()
                     .filter(remote -> eventSourceMap.containsKey(remote))
                     .forEach(remote -> {
