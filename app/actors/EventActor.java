@@ -1,10 +1,11 @@
 package actors;
 
 import akka.actor.UntypedActor;
+import common.ActorMessage;
+import common.DBCompleteMsg;
+import common.EventSourceMsg;
 import play.Logger;
 import play.libs.EventSource;
-import play.libs.F;
-import common.MessageType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,17 +16,18 @@ import java.util.Map;
 public class EventActor extends UntypedActor {
 
     Map<String, EventSource> eventSourceMap = new HashMap<>();
+    Map<String, String> remoteAddrQuery = new HashMap<>();
 
     @Override
     public void onReceive(Object message) throws Exception {
 
         // Handle connections
-        if (message instanceof F.Tuple) {
-            String remoteAddress = (String) ((F.Tuple) message)._2;
+        if (message instanceof ActorMessage) {
+            String remoteAddress = ((ActorMessage) message).getRemoteAddress();
 
-            if (((F.Tuple) message)._1 instanceof EventSource) {
+            if (message instanceof EventSourceMsg) {
 
-                final EventSource eventSource = (EventSource) ((F.Tuple) message)._1;
+                final EventSource eventSource = ((EventSourceMsg) message).getEventSource();
 
                 if (eventSourceMap.containsKey(remoteAddress)) {
                     // Browser is disconnected
@@ -40,15 +42,9 @@ public class EventActor extends UntypedActor {
                 }
             }
 
-            if (((F.Tuple) message)._1 instanceof MessageType) {
-                switch ((MessageType) ((F.Tuple) message)._1) {
-                    case DB_FINISH:
-                        if (eventSourceMap.containsKey(remoteAddress))
-                            eventSourceMap.get(remoteAddress).send(EventSource.Event.event("db_finish"));
-                        break;
-                    default:
-                        Logger.warn("Undefined msg");
-                }
+            if (message instanceof DBCompleteMsg) {
+                if (eventSourceMap.containsKey(remoteAddress))
+                    eventSourceMap.get(remoteAddress).send(EventSource.Event.event("db_finish"));
             }
         }
 

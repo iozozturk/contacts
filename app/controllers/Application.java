@@ -1,6 +1,7 @@
 package controllers;
 
 import akka.actor.ActorRef;
+import common.EventSourceMsg;
 import play.Logger;
 import play.libs.EventSource;
 import play.libs.F;
@@ -23,8 +24,8 @@ public class Application extends Controller {
             @Override
             public void onConnected() {
                 EventSource currentSocket = this;
-                F.Tuple<EventSource, String> message = new F.Tuple<>(currentSocket, remoteAddress);
-                ActorService.eventRef.tell(message, ActorRef.noSender());
+                EventSourceMsg eventSourceMsg = new EventSourceMsg(currentSocket, remoteAddress);
+                ActorService.eventRef.tell(eventSourceMsg, ActorRef.noSender());
             }
         };
         return ok(eventSource);
