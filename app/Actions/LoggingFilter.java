@@ -1,4 +1,4 @@
-package Actions;
+package actions;
 
 import play.Logger;
 import play.libs.F;
