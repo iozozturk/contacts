@@ -1,5 +1,6 @@
 package controllers;
 
+import Actions.Exceptions;
 import Actions.LoggingFilter;
 import akka.actor.ActorRef;
 import common.DBCompleteMsg;
@@ -20,6 +21,7 @@ import java.io.IOException;
  * Created by ismet on 19/11/15.
  */
 @With(LoggingFilter.class)
+@Exceptions.Handled
 public class FileController extends Controller {
     public static final String UPLOAD_DIR = Play.application().configuration().getString("store.file.dir");
 

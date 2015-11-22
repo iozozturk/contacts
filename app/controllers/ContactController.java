@@ -1,5 +1,6 @@
 package controllers;
 
+import Actions.Exceptions;
 import Actions.LoggingFilter;
 import akka.actor.ActorRef;
 import common.UpdateQueryMsg;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
  * Created by ismet on 19/11/15.
  */
 @With(LoggingFilter.class)
+@Exceptions.Handled
 public class ContactController extends Controller {
 
     public static Result getContacts(String query) {
