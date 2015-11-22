@@ -4,6 +4,7 @@ import akka.actor.UntypedActor;
 import play.Logger;
 import play.libs.EventSource;
 import play.libs.F;
+import common.MessageType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,22 +15,6 @@ import java.util.Map;
 public class EventActor extends UntypedActor {
 
     Map<String, EventSource> eventSourceMap = new HashMap<>();
-
-    public enum Messages {
-        DB_FINISH("db_finish");
-
-        private final String message;
-
-        Messages(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-    }
-
-    public static final String DB_FINISH = "DB Operations Finished";
 
     @Override
     public void onReceive(Object message) throws Exception {
@@ -55,10 +40,11 @@ public class EventActor extends UntypedActor {
                 }
             }
 
-            if (((F.Tuple) message)._1 instanceof Messages) {
-                switch ((Messages)((F.Tuple) message)._1) {
+            if (((F.Tuple) message)._1 instanceof MessageType) {
+                switch ((MessageType) ((F.Tuple) message)._1) {
                     case DB_FINISH:
-                        eventSourceMap.get(remoteAddress).send(EventSource.Event.event("db_finish"));
+                        if (eventSourceMap.containsKey(remoteAddress))
+                            eventSourceMap.get(remoteAddress).send(EventSource.Event.event("db_finish"));
                         break;
                     default:
                         Logger.warn("Undefined msg");

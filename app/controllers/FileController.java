@@ -1,6 +1,5 @@
 package controllers;
 
-import actors.EventActor;
 import akka.actor.ActorRef;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -12,6 +11,7 @@ import play.mvc.Result;
 import play.mvc.Results;
 import services.ActorService;
 import services.ContactService;
+import common.MessageType;
 import utils.XMLUtils;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,7 +45,7 @@ public class FileController extends Controller {
                 Thread.sleep(1000); //Simulating a huge file taking time
                 return null;
             }).map((n) -> {
-                F.Tuple<EventActor.Messages, String> message = new F.Tuple<>(EventActor.Messages.DB_FINISH, ctx().request().remoteAddress());
+                F.Tuple<MessageType, String> message = new F.Tuple<>(MessageType.DB_FINISH, ctx().request().remoteAddress());
                 ActorService.eventRef.tell(message, ActorRef.noSender());
                 return null;
             });
