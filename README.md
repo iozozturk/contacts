@@ -1,8 +1,25 @@
-# contacts
+# Contacts
 
-Min. of Java 8 required
+Contacts is a seed project written in Java 8 for Play Framework 2.4.3 showcasing AngularJS, MongoDb with Morphia
+client, Server Sent Events (SSE), Akka Actors and Akka Scheduler usage
+ on an XML file processing scenario.
+ 
+## Features
+- Async File upload at server side (See sample XML file and schema located at "samples" package)
+- Validating XML file against defined schema
+- Informing client when DB operations complete using SSE
+- Saving file to directory defined in conf
+- Mapping XML to Java models and saving to MongoDB merging duplicate entities
+- Realtime Search at MongoDB on a key
+- Updating search results on client utilizing SSE
 
-Simply run the command below in the root directory.
-It may take some time to resolve the dependencies for the first run.
+## Requirements
+- Min. of Java 8
+- MongoDb
 
-./activator run 
+## Instructions
+
+- Check that your MongoDb instance is running and make changes on "application.conf" file in the conf package if necessary
+- Run "./activator run" in the root directory for Mac, choose activator.bat for Windows
+- It may take some time to resolve dependencies for the first run
+- Navigate to localhost:9000 in your browser
