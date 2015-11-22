@@ -13,6 +13,8 @@ angular.module('contacts.controllers', ['contacts.services'])
             $scope.$apply(function () {
                 if (e.data == "db_finish") {
                     $scope.message = "Processed contacts and saved!"
+                } else {
+                    $scope.contacts = JSON.parse(e.data);
                 }
             });
         };
@@ -47,18 +49,14 @@ angular.module('contacts.controllers', ['contacts.services'])
         };
 
         $scope.search = function () {
-            if ($scope.query == "") {
-                $scope.contacts = [];
-            } else {
-                contactService.searchContacts($scope.query)
-                    .success(function (response) {
-                        $scope.contacts = response;
-                    })
-                    .error(function (error) {
-                        $scope.contacts = [];
-                        console.log("error in search service" + error)
-                    });
-            }
+            contactService.searchContacts($scope.query)
+                .success(function (response) {
+                    $scope.contacts = response;
+                })
+                .error(function (error) {
+                    $scope.contacts = [];
+                    console.log("error in search service" + error)
+                });
         };
 
 
