@@ -19,7 +19,7 @@ public class ActorService {
         eventRef = actorSystem.actorOf(Props.create(EventActor.class), "eventActor");
     }
 
-    public static void stopActors(){
+    public static void stopActors() {
         eventRef.tell(PoisonPill.getInstance(), ActorRef.noSender());
         actorSystem.shutdown();
         Logger.info("Actors shutdown");

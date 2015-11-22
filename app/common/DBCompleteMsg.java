@@ -7,7 +7,7 @@ public class DBCompleteMsg implements ActorMessage {
 
     private String remoteAddress;
 
-    public DBCompleteMsg(String remoteAddress){
+    public DBCompleteMsg(String remoteAddress) {
         this.remoteAddress = remoteAddress;
     }
 

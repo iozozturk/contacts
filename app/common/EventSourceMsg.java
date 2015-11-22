@@ -9,7 +9,7 @@ public class EventSourceMsg implements ActorMessage {
     private String remoteAddress;
     private EventSource eventSource;
 
-    public EventSourceMsg(EventSource eventSource, String remoteAddress){
+    public EventSourceMsg(EventSource eventSource, String remoteAddress) {
         this.remoteAddress = remoteAddress;
         this.eventSource = eventSource;
     }

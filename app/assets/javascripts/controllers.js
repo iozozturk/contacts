@@ -44,7 +44,7 @@ angular.module('contacts.controllers', ['contacts.services'])
                 })
                 .error(function (error) {
                     $scope.message = error;
-                    console.log("error in upload serice" + error)
+                    console.log("error in upload service" + error)
                 });
         };
 

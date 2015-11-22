@@ -20,18 +20,18 @@ import java.util.stream.Stream;
  */
 public class ContactService {
 
-    public static void saveContacts(Contact contact){
+    public static void saveContacts(Contact contact) {
         Datastore datastore = DBService.getMorphiaClient();
 
         Query<Contact> findContact = datastore.createQuery(Contact.class)
                 .field("name").equal(contact.getName())
                 .field("lastName").equal(contact.getLastName());
 
-        UpdateOperations<Contact> updatePhones = datastore.createUpdateOperations(Contact.class).addAll("phones", contact.getPhones(),false);
+        UpdateOperations<Contact> updatePhones = datastore.createUpdateOperations(Contact.class).addAll("phones", contact.getPhones(), false);
         datastore.update(findContact, updatePhones, true);
     }
 
-    public static List<Contact> parseXMLContacts(NodeList nodeList){
+    public static List<Contact> parseXMLContacts(NodeList nodeList) {
         Stream<Node> nodeStream = IntStream.range(0, nodeList.getLength()).mapToObj(nodeList::item);
 
         Function<Node, Contact> parseNode = node -> {
@@ -48,7 +48,7 @@ public class ContactService {
         return nodeStream.map(parseNode).collect(Collectors.toList());
     }
 
-    public static List<Contact> findByName(String name){
+    public static List<Contact> findByName(String name) {
         Datastore datastore = DBService.getMorphiaClient();
         Query<Contact> contacts = datastore.find(Contact.class).field("name").startsWithIgnoreCase(name);
         return contacts.asList();
