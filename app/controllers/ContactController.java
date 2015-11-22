@@ -1,10 +1,12 @@
 package controllers;
 
+import Actions.LoggingFilter;
 import akka.actor.ActorRef;
 import common.UpdateQueryMsg;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import services.ActorService;
 import services.ContactService;
 
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by ismet on 19/11/15.
  */
+@With(LoggingFilter.class)
 public class ContactController extends Controller {
 
     public static Result getContacts(String query) {

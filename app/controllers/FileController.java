@@ -1,15 +1,13 @@
 package controllers;
 
+import Actions.LoggingFilter;
 import akka.actor.ActorRef;
 import common.DBCompleteMsg;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import play.Play;
 import play.libs.F;
-import play.mvc.Controller;
-import play.mvc.Http;
-import play.mvc.Result;
-import play.mvc.Results;
+import play.mvc.*;
 import services.ActorService;
 import services.ContactService;
 import utils.XMLUtils;
@@ -21,6 +19,7 @@ import java.io.IOException;
 /**
  * Created by ismet on 19/11/15.
  */
+@With(LoggingFilter.class)
 public class FileController extends Controller {
     public static final String UPLOAD_DIR = Play.application().configuration().getString("store.file.dir");
 

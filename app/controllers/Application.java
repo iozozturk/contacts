@@ -1,5 +1,6 @@
 package controllers;
 
+import Actions.LoggingFilter;
 import akka.actor.ActorRef;
 import common.EventSourceMsg;
 import play.Logger;
@@ -7,9 +8,11 @@ import play.libs.EventSource;
 import play.libs.F;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import services.ActorService;
 import views.html.*;
 
+@With(LoggingFilter.class)
 public class Application extends Controller {
 
     public static Result index() {
